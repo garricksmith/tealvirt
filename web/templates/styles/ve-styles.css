@@ -1,0 +1,182 @@
+<style>
+/*******************************************************************************
+Normal Tag Selectors
+*******************************************************************************/
+body {
+	background-color: #007073;
+	font-family: Helvetica;
+}
+
+h1 {
+	color:#007073;
+	background-color: white;
+	border-style: solid;
+	border-width: 2px;
+	border-color: #a27752;
+	margin: 15px 0px 0px 0px;
+	padding: 10px 0px 10px 0px;
+	text-align: center;
+	font-size: 40px;
+}
+
+h2 {
+	color: #424242;
+	margin: 10px 0px 0px 0px;
+	padding: 0px 0px 0px 10px;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+table {
+	margin: 0px 10px 10px 0px;
+	width: 100%;
+	border-collapse: collapse;
+	border-width: 0px 0px 1px 1px;
+	border-style: solid;
+	border-color: #a27752;
+}
+
+table, th, td {
+	border-bottom: 1px solid #a27752;
+}
+
+th, td {
+	text-align: center;
+	padding: 5px 0px 5px 0px !important;
+}
+
+tr:hover {
+	background-color: white;
+}
+
+table a:link, a:visited {
+	text-decoration: none;
+	color: #424242;
+}
+
+table a:hover {
+	text-decoration: none;
+	color: #a27752
+}
+
+/*******************************************************************************
+Class Tag Selectors
+*******************************************************************************/
+.status {
+    float:right;
+}
+
+.menu-container {
+	background-color: #e9f2f5;
+	border-style: solid;
+	border-width: 0px 2px 2px 2px;
+	border-color: #a27752;
+}
+
+.btn-list {
+    margin: 0px 0px 10px 0px;
+    border-width: 2px 2px 2px 0px;
+    border-style: solid;
+    border-color: #a27752;
+    border-radius: 0px 5px 5px 0px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.btn-list div{
+    padding: 5px 5px 5px 10px;
+    margin: 0px;
+    background-color: #a27752;
+    color: white;
+}
+
+.btn-list div:hover {
+    background-color: #e9f2f5;
+    color: #424242;
+}
+
+.btn-solo div{
+    padding: 5px 5px 5px 10px;
+    margin: 0px 0px 10px 0px;
+    background-color: #a27752;
+    color: white;
+    border-style: solid;
+    border-color: #a27752;
+    border-width: 2px 2px 2px 0px;
+    border-radius: 0px 5px 5px 0px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.btn-solo div:hover {
+    background-color: #e9f2f5;
+    color: #424242;
+}
+
+.ve-btn-list{
+	margin: 0px 0px 10px 0px;
+	border-width: 0px 2px 2px 0px;
+	border-style: solid;
+	border-color: #a27752;
+	border-radius: 0px 0px 5px 0px;
+}
+
+.ve-btn-list div{
+	padding: 5px;
+	margin: 0px;
+	background-color: #a27752;
+	color: white;
+}
+
+.ve-btn-list div:hover {
+	background-color: #e9f2f5;
+	color: #424242;
+}
+
+.plain-list {
+	list-style-type: none;
+	font-size: 16px;
+	padding: 5px 5px 5px 10px;
+	margin: 0px;
+}
+
+.list-header {
+	font-size: 18px;
+	padding: 5px 5px 0px 5px;
+	margin: 0px;
+}
+
+/*******************************************************************************
+ID Tag Selectors
+*******************************************************************************/
+#back-btn {
+    font-size: 18px;
+}
+
+#back-btn:link, #back-btn:visited {
+	text-decoration: none;
+	color: #e9f2f5;
+}
+
+#back-btn:hover {
+	text-decoration: none;
+	color: #a27752
+}
+
+/*******************************************************************************
+Responsive Tag Selectors
+*******************************************************************************/
+@media screen and (max-width: 768px) {
+	.btn-list, .btn-solo div, .ve-btn-list {
+		margin: 0px 0px 5px 0px;
+		border-radius: 0px 0px 0px 0px;
+	}
+	
+	table {
+		border-width: 0px 0px 1px 0px;
+	}
+}
+</style>
+

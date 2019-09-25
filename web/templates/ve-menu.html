@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h1>{{ title }}</h1>
+    </div>
+</div>
+<div class="menu-container">
+    <div class="row">
+        <div class="col-sm-4">
+            <h2>My Virtual Environments</h2>
+            <div class="btn-list">
+                {% for ve in all_ves %}
+                    <a href="#" onclick=doPost("action=displayVMs&title={{ ve }}")><div>{{ ve }} <p class="status"> {{ all_ves[ve] }}</p></div></a>
+                {% endfor %}
+            </div>
+            <a class="btn-solo" href="#" onclick=doPost("action=displayProfessors&title=Add-VE")>
+                <div>Add New VE</div>
+            </a>
+        </div>
+    </div>
+</div>

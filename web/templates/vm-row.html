@@ -1,0 +1,9 @@
+<tr class="vm">
+    <td>{{ vm_name }}</td>
+    <td id="vm-status-{{ vm_name }}">...</td>
+    <td><a href="#" onclick=startVM("{{ vm_name }}")><span class="glyphicon glyphicon-play"></span></a></td>
+    <td><a href="#" onclick=stopVM("{{ vm_name }}")><span class="glyphicon glyphicon-stop"></span></a></td>
+    <td><a href="#" onclick=doPost("action=displayLog&title={{ vm_name }}")><span class="glyphicon glyphicon-file"></span></a></td>
+    <td><a href="#" onclick=doPost("action=displayRollbacks&title={{ vm_name }}")><span class="glyphicon glyphicon-repeat"></span></a></td>
+    <td><a href="#"><span class="glyphicon glyphicon-blackboard"></span></a></td>
+</tr>

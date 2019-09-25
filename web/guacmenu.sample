@@ -1,0 +1,289 @@
+#!/usr/bin/env python3
+#
+# {{ ansible_managed }}
+#
+# Guacamole SSO menu. Displays a menu containing the blocks and connections
+# that the current user is authorized to see. Each connection is a link to
+# the guacsession launcher with the connection name passed as a URL parameter.
+#
+# Author:   Dr. Mike Murphy <mmurphy2@coastal.edu>
+# Revision: 30 May 2019
+
+import cgi
+import cisso
+import configparser
+import grp
+import pwd
+
+BASE_URL='{{ cgiapps_guacmenu_launcher_url }}'
+CONFIG_FILE='{{ cgiapps_guacmenu_config_file }}'
+
+
+# Returns true iff username is authorized by the given access control list.
+# See the guacsession launcher for details.
+def check_acl(username, acl):
+    result = True
+    if acl:
+        result = False
+        gid = pwd.getpwnam(username)[3]
+        parts = acl.split(',')
+        for part in parts:
+            item = part.strip()
+            if item == username:
+                result = True
+                break
+            elif item[0] == '@':
+                groupinfo = grp.getgrnam(item[1:])
+                if gid == groupinfo[2] or username in groupinfo[3]:
+                    result = True
+                    break
+                #
+            #
+        #
+    #
+    return result
+#
+
+
+# Outputs an HTML block as defined in the INI file.
+def print_block(show):
+    print('<div class="row">')
+    print('    <div class="col-sm-12">')
+    print('        <div class="block">')
+    print(show)
+    print('        </div>')
+    print('    </div>')
+    print('</div>')
+#
+
+
+# Outputs a link to the Guacamole session launcher for the given connection
+# and configuration.
+def print_guac(connection, config):
+    print('<div class="row">')
+    print('    <div class="col-sm-12">')
+    print('        <ul class="guac">')
+    icon = 'fa-desktop'
+    if config.get('protocol', fallback='rdp') in ('ssh', 'telnet'):
+        icon = 'fa-keyboard'
+    #
+    print('<a href="' + BASE_URL + connection + '">' + '<li>' + \
+        '<i class="fas ' + icon + '"></i>' + config['show'] + \
+        '</li></a>')
+    print('        </ul>')
+    print('    </div>')
+    print('</div>')
+#
+
+
+dec = cisso.CIDecoder()
+uname = None
+
+if dec.check_cookie():
+    data = dec.get_login_details()
+    uname = data['username']
+    print('Status: 200 OK')
+else:
+    print('Status: 401 Unauthorized')
+#
+
+# Content-Type header and blank line to end headers (HTTP protocol)
+print('Content-Type: text/html')
+print('')
+
+# HTML header content
+print('''
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+<title>{{ cgiapps_guacmenu_title }}</title>
+
+<style>
+.guac {
+	list-style-type: none;
+	padding: 0px 20px 0px 20px;
+}
+
+.guac li {
+	margin: 5px;
+	padding: 2px;
+	border-style: solid;
+	border-color:#a27752;
+	border-width: 2px;
+	border-radius: 5px;
+	text-align: left;
+	font-size: 18px;
+}
+
+h1 {
+	color: #007073;
+	margin: 0px 0px 0px 0px;
+	padding: 10px 0px 10px 0px;
+	border-style: solid;
+	border-color: #a27752;
+	border-width: 2px 2px 2px 2px;
+	background-color: white;
+	font-size: 40px;
+	text-align: center;
+}
+
+body {
+	background-color: #007073;
+	font-family: Helvetica;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+.block {
+    font-size: 12 px;
+	text-align: left;
+	color: #424242;
+	margin: 10px 0px 0px 0px;
+	padding: 0px 10px 0px 10px;
+}
+
+.connections {
+	background-color: #e9f2f5;
+	border-style: solid;
+	border-color: #a27752;
+	border-width: 0px 2px 2px 2px;
+	padding-bottom: 15px;
+}
+
+
+.guac a:visited {
+	text-decoration: none;
+	color: #424242;
+}
+
+.guac a:link {
+	text-decoration: none;
+	color: #424242;
+}
+
+.guac a:hover li {
+	text-decoration: none;
+	color: #e9f2f5;
+	background-color: #007073;
+}
+
+i {
+    padding: 5px 10px 0px 5px;
+}
+
+footer {
+    color: white;
+    margin-top: 15px;
+}
+
+footer a:link {
+    color: white;
+    text-decoration: underline;
+}
+
+footer a:visited {
+    color: white;
+    text-decoration: underline;
+}
+
+footer a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+p.italic {
+    font-style: italic;
+}
+
+.whitebg {
+    background-color: white;
+}
+</style>
+
+</head>
+<body class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>{{ cgiapps_guacmenu_title }}</h1>
+        </div>
+    </div>
+
+    <div class="connections">
+''')
+
+if uname:
+    parser = configparser.ConfigParser(interpolation=None)
+    parser.read(CONFIG_FILE)
+    for section in parser:
+        if section.startswith('block ') or section.startswith('guac '):
+            acl = parser.get(section, 'acl', fallback=None)
+            if check_acl(uname, acl):
+                if section.startswith('block '):
+                    if 'show' in parser[section]:
+                        print_block(parser[section]['show'])
+                    #
+                else:
+                    if 'show' in parser[section]:
+                        print_guac(section[5:], parser[section])
+                    #
+                #
+            #
+        #
+    #
+#
+
+
+# Footer
+print('''
+    </div>
+
+    <footer class="page-footer">
+        <div class="row">
+            <div class="col-sm-12">
+                <p>Copyright &copy; 2019 Coastal Carolina University</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <p class="italic">Coastal Carolina University does not
+                discriminate on the basis of race, color, religion, sex,
+                sexual orientation, gender identity, gender expression,
+                national origin, age, genetic information, mental or
+                physical disability, or status as a disabled or Vietnam-era
+                veteran in its admissions policies, programs, activities,
+                or employment practices. For more information, visit
+                <a href="https://www.coastal.edu/titleix/" target="_blank">Title
+                IX</a> or
+                <a href="https://www.coastal.edu/eeo/" target="_blank">EEO</a>.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <p>Hosted by the <a href="https://ci.coastal.edu"
+                target="_blank">CCU Cyberinfrastructure Project</a>. If you
+                need accessibility or other assistance, please visit the
+                <a href="https://ci.coastal.edu/helpdesk" target="_blank">CI
+                Project Help Desk</a>.</p>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-sm-12">
+                <p><a href="https://www.coastal.edu" target="_blank">
+                <img src="/wp-content/themes/ccu/assets/images/logo-footer-primary@2x.png"
+                alt="Coastal Carolina University [logo]" width="181px"
+                class="whitebg"></a></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+''')
+

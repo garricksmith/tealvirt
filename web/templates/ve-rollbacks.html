@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-sm-12">
+        <a id ="back-btn" href="#" onclick=doPost("action=displayVMs&title=VE-Menu")><span class="glyphicon glyphicon-chevron-left"></span>Go Back</a>
+        <h1>{{ title }}</h1>
+    </div>
+</div>
+<div class="menu-container">
+	<div class="row">
+		<div class="col-sm-12">
+		<p class="list-header">Rollbacks:</p>
+			<ul class="plain-list">
+				{% for rollback in rollbacks %}
+				<a href="#"><li> {{ rollback }} </li></a>	
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>

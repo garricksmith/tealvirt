@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-sm-12">
+     <a id ="back-btn" href="#" onclick=doPost("action=displayProfessors&title=VE-Menu")><span class="glyphicon glyphicon-chevron-left"></span>Go Back</a>
+        <h1>{{ title }}</h1>
+    </div>
+</div>
+<div class="menu-container">
+    <div class="row">
+        <div class="col-sm-4">
+            <h2>Select Your Course</h2>
+            <div class="btn-list">
+                {% for course in courses %}
+                    <a href="#" onclick=doPost("action=selectVE&title=Add-VE")><div>{{ course }}</div></a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
